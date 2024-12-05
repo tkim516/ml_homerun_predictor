@@ -113,7 +113,7 @@ if st.session_state['homerun'] == True:
   st.image('homerun.gif', use_column_width=True)
 
 if st.session_state['homerun'] == False:
-  st.markdown("<h1 style='font-size: 60px; text-align: center; color: #57cfff;'>TRY AGAIN!!!</h1>", unsafe_allow_html=True)
+  st.markdown("<h1 style='font-size: 60px; text-align: center; color: #eb5b42;'>TRY AGAIN</h1>", unsafe_allow_html=True)
   st.image('try_again.gif', use_column_width=True)
 
 elif st.session_state['homerun'] == None:
