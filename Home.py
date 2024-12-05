@@ -201,12 +201,11 @@ elif st.session_state['homerun'] == None:
     
     st.rerun()
 
-st.divider()
 with st.expander('Game tips'):
   st.write('Higher launch speeds have a greater home run probability.')
   st.write('The ideal launch angle is between 20 and 25 degrees.')
   st.write('Each park has different dimensions. Try hitting the ball towards the wall with the shortest distance and height.')
-
+st.divider()
 if st.button('New at bat'):
   st.session_state['i'] += 1
   st.session_state['homerun'] = None
