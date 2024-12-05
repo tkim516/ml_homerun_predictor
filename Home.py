@@ -200,15 +200,29 @@ elif st.session_state['homerun'] == None:
       st.session_state['homerun'] = False
     
     st.rerun()
-
 with st.expander('Game tips'):
   st.write('Higher launch speeds have a greater home run probability.')
   st.write('The ideal launch angle is between 20 and 25 degrees.')
   st.write('Each park has different dimensions. Try hitting the ball towards the wall with the shortest distance and height.')
-st.divider()
-if st.button('New at bat'):
-  st.session_state['i'] += 1
-  st.session_state['homerun'] = None
-  st.session_state['pred_proba'] = 0
+with st.form(key='new_at_bat_form'):
+  st.markdown("""
+    <style>
+    .center-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+    </style>
+  """, unsafe_allow_html=True)
 
-  st.rerun()
+# Wrap the button in a div with the custom class
+  submit_next_at_bat = st.form_submit_button(label='Next at bat', type='secondary', use_container_width=True)
+
+  if submit_next_at_bat:
+    st.session_state['i'] += 1
+    st.session_state['homerun'] = None
+    st.session_state['pred_proba'] = 0
+
+    st.rerun()
+
