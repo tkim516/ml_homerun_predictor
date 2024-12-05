@@ -150,7 +150,7 @@ elif st.session_state['homerun'] == None:
   st.divider()
   
   with st.form(key='input_form'):
-    input_speed = st.slider('Set launch speed (MPH)', min_value=0, max_value=105, value=50)
+    input_speed = st.slider('Set launch speed (MPH)', min_value=0, max_value=110, value=55)
     input_angle = st.slider('Set launch angle (degrees)', min_value=-80, max_value=80, value=20)
     input_bearing = st.radio('Set ball flight direction', options=['Left', 'Center', 'Right'])
     
