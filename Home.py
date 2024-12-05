@@ -110,10 +110,12 @@ if 'i' not in st.session_state:
 if st.session_state['homerun'] == True:
   st.balloons()
   st.markdown("<h1 style='font-size: 60px; text-align: center; color: #57cfff;'>HOMERUN!!!</h1>", unsafe_allow_html=True)
+  st.divider()
   st.image('homerun.gif', use_column_width=True)
 
 if st.session_state['homerun'] == False:
   st.markdown("<h1 style='font-size: 60px; text-align: center; color: #eb5b42;'>TRY AGAIN</h1>", unsafe_allow_html=True)
+  st.divider()
   st.image('try_again.gif', use_column_width=True)
 
 elif st.session_state['homerun'] == None:
@@ -123,25 +125,33 @@ elif st.session_state['homerun'] == None:
 
   st.markdown("<h1 style='text-align: center; color: #57cfff;'>Can you hit a homerun?</h1>", unsafe_allow_html=True)
   st.markdown("<h3 style='text-align: center;'>Use machine learning models to predict homeruns</h3>", unsafe_allow_html=True)
+  st.divider( )
   st.image('ohtani.gif', use_column_width=True)
-  st.subheader('')
-  st.subheader(f'{scenario_data['home_team']} vs {scenario_data['away_team']} at {scenario_data['stadium']} on {scenario_data['date']}', divider='gray')
-  with st.expander('See Additional Data'):
-    st.dataframe(df_merged)
 
-  with st.expander(f'{scenario_data['stadium']} Stadium Info'):
-    st.write(f'Left Field Wall distance and height: {scenario_data['lf_D']} and {scenario_data['lf_W']} feet')
-    st.write(f'Center Field Wall distance and height: {scenario_data['cf_D']} and {scenario_data['cf_W']} feet')
-    st.write(f'Right Field Wall distance and height: {scenario_data['rf_D']} and {scenario_data['rf_W']} feet')
-
-  st.subheader(f'You are batting as {scenario_data['batter_name']} and facing the pitcher, {scenario_data['pitcher_name']}.')
-  st.subheader(f'It\'s inning number {scenario_data['inning']} and there are {scenario_data['outs']} outs.')
-  st.subheader(f'The count is {scenario_data['balls']} balls and {scenario_data['strikes']} strikes.')
-  st.subheader(f'{scenario_data['pitcher_name']} winds up and throws you a {scenario_data['pitch_thrown']} at {scenario_data['pitch_mph']} MPH!')
-
+  with st.sidebar:
+    st.header('Stadium info', divider='gray')
+    st.subheader(f"LF wall distance: {scenario_data['lf_D']} feet")
+    st.subheader(f"LF wall height: {scenario_data['lf_W']} feet")
+    st.subheader(f"CF wall distance: {scenario_data['cf_D']} feet")
+    st.subheader(f"CF wall height: {scenario_data['cf_W']} feet")
+    st.subheader(f"RF wall distance: {scenario_data['rf_D']} feet")
+    st.subheader(f"RF wall height: {scenario_data['rf_W']} feet")
+    st.header('Game info', divider='gray')
+    st.subheader(f'Inning number: {scenario_data['inning']}')
+    st.subheader(f'Outs: {scenario_data['outs']}')
+    st.subheader(f'Balls: {scenario_data['balls']}')
+    st.subheader(f'Strikes: {scenario_data['strikes']}')
+  
+  st.divider()
+  st.subheader(f'{scenario_data['home_team']} vs {scenario_data['away_team']} at {scenario_data['stadium']} on {scenario_data['date']}')
+  st.write("")
+  st.subheader(f'Batting as {scenario_data['batter_name']} and facing pitcher, {scenario_data['pitcher_name']}.')
+  st.subheader(f'{scenario_data['pitcher_name']} throws you a {scenario_data['pitch_thrown']} at {scenario_data['pitch_mph']} MPH!')
+  st.divider()
+  
   with st.form(key='input_form'):
-    input_speed = st.slider('Set launch speed (MPH)', min_value=0, max_value=120, value=60)
-    input_angle = st.slider('Set launch angle (Degrees)', min_value=-80, max_value=80, value=0)
+    input_speed = st.slider('Set launch speed (MPH)', min_value=0, max_value=105, value=60)
+    input_angle = st.slider('Set launch angle (degrees)', min_value=-80, max_value=80, value=20)
     input_bearing = st.radio('Set ball flight direction', options=['Left', 'Center', 'Right'])
     
     encoded_row['launch_speed'] = input_speed
@@ -162,10 +172,22 @@ elif st.session_state['homerun'] == None:
       encoded_row['bearing_center'] = False
       encoded_row['bearing_right'] = True
     
-    submit_form = st.form_submit_button(label='Hit')
+    st.markdown("""
+    <style>
+    .center-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # Wrap the button in a div with the custom class
+    submit_form = st.form_submit_button(label='Hit', type='primary', use_container_width=True)
 
   encoded_row_df = encoded_row.to_frame().T
-  st.dataframe(encoded_row_df)
+
   if submit_form:
     pred = ada_clf.predict(encoded_row_df)[0]
     pred_proba = ada_clf.predict_proba(encoded_row_df).max()
@@ -179,9 +201,10 @@ elif st.session_state['homerun'] == None:
     
     st.rerun()
 
-new_at_bat = st.button('New at bat')
+st.divider()
 
-if new_at_bat:
+
+if st.button('New at bat'):
   st.session_state['i'] += 1
   st.session_state['homerun'] = None
   st.session_state['pred_proba'] = 0
