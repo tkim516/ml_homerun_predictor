@@ -109,7 +109,7 @@ if 'i' not in st.session_state:
 
 if st.session_state['homerun'] == True:
   st.balloons()
-  st.markdown("<h1 style='font-size: 60px; text-align: center; color: #57cfff;'>HOMERUN!!!</h1>", unsafe_allow_html=True)
+  st.markdown("<h1 style='font-size: 60px; text-align: center; color: #57cfff;'>HOME RUN!!!</h1>", unsafe_allow_html=True)
   st.divider()
   st.image('homerun.gif', use_column_width=True)
 
@@ -123,13 +123,13 @@ elif st.session_state['homerun'] == None:
   scenario_data = get_scenario_info(st.session_state['i'])
   encoded_row = get_encoded_row_from_df(st.session_state['i'])
 
-  st.markdown("<h1 style='text-align: center; color: #57cfff;'>Can you hit a homerun?</h1>", unsafe_allow_html=True)
-  st.markdown("<h3 style='text-align: center;'>Use machine learning models to predict homeruns</h3>", unsafe_allow_html=True)
+  st.markdown("<h1 style='text-align: center; color: #57cfff;'>Can you hit a home run?</h1>", unsafe_allow_html=True)
+  st.markdown("<h3 style='text-align: center;'>Use machine learning models to predict home runs</h3>", unsafe_allow_html=True)
   st.divider( )
   st.image('ohtani.gif', use_column_width=True)
 
   with st.sidebar:
-    st.header('Stadium info', divider='gray')
+    st.header('Park info', divider='gray')
     st.subheader(f"LF wall distance: {scenario_data['lf_D']} feet")
     st.subheader(f"LF wall height: {scenario_data['lf_W']} feet")
     st.subheader(f"CF wall distance: {scenario_data['cf_D']} feet")
@@ -150,7 +150,7 @@ elif st.session_state['homerun'] == None:
   st.divider()
   
   with st.form(key='input_form'):
-    input_speed = st.slider('Set launch speed (MPH)', min_value=0, max_value=105, value=60)
+    input_speed = st.slider('Set launch speed (MPH)', min_value=0, max_value=105, value=50)
     input_angle = st.slider('Set launch angle (degrees)', min_value=-80, max_value=80, value=20)
     input_bearing = st.radio('Set ball flight direction', options=['Left', 'Center', 'Right'])
     
@@ -202,7 +202,10 @@ elif st.session_state['homerun'] == None:
     st.rerun()
 
 st.divider()
-
+with st.expander('Game tips'):
+  st.write('Higher launch speeds have a greater home run probability.')
+  st.write('The ideal launch angle is between 20 and 25 degrees.')
+  st.write('Each park has different dimensions. Try hitting the ball towards the wall with the shortest distance and height.')
 
 if st.button('New at bat'):
   st.session_state['i'] += 1
