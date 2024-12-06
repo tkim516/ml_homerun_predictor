@@ -154,12 +154,15 @@ elif st.session_state['homerun'] == None:
     if input_model == 'AdaBoost (recommended)':
       model = ada_clf
       st.session_state['model_index'] = 0
+      st.rerun()
     elif input_model == 'Random Forest':
       model = rf_clf
       st.session_state['model_index'] = 1
+      st.rerun()
     elif input_model == 'Decision Tree':
       model = dt_clf
       st.session_state['model_index'] = 2
+      st.rerun()
 
     st.header('Park info', divider='gray')
     st.subheader(f"LF wall distance: {scenario_data['lf_D']} feet")
