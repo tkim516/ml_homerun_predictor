@@ -98,6 +98,18 @@ ada_pickle = open('ada.pickle', 'rb')
 ada_clf = pickle.load(ada_pickle)
 ada_pickle.close()
 
+dt_pickle = open('dt.pickle', 'rb') 
+dt_clf = pickle.load(dt_pickle)
+dt_pickle.close()
+
+rf_pickle = open('rf.pickle', 'rb') 
+rf_clf = pickle.load(rf_pickle)
+rf_pickle.close()
+
+xgb_pickle = open('xgb.pickle', 'rb') 
+xgb_clf = pickle.load(xgb_pickle)
+xgb_pickle.close()
+
 if 'homerun' not in st.session_state:
   st.session_state['homerun'] = None
 
@@ -107,16 +119,23 @@ if 'pred_proba' not in st.session_state:
 if 'i' not in st.session_state:
   st.session_state['i'] = 0
 
+if 'model_index' not in st.session_state:
+  st.session_state['model_index'] = 0
+
 if st.session_state['homerun'] == True:
   st.balloons()
   st.markdown("<h1 style='font-size: 60px; text-align: center; color: #57cfff;'>HOME RUN!!!</h1>", unsafe_allow_html=True)
   st.divider()
   st.image('homerun.gif', use_column_width=True)
+  st.divider()
+  st.subheader(f'Prediction confidence: {str(st.session_state['pred_proba']*100)[:5]}%')
 
 if st.session_state['homerun'] == False:
   st.markdown("<h1 style='font-size: 60px; text-align: center; color: #eb5b42;'>TRY AGAIN</h1>", unsafe_allow_html=True)
   st.divider()
   st.image('try_again.gif', use_column_width=True)
+  st.divider()
+  st.subheader(f'Prediction confidence: {str(st.session_state['pred_proba']*100)[:5]}%')
 
 elif st.session_state['homerun'] == None:
 
@@ -129,6 +148,19 @@ elif st.session_state['homerun'] == None:
   st.image('ohtani.gif', use_column_width=True)
 
   with st.sidebar:
+    st.header('Machine learning models', divider='gray')
+    input_model = st.radio('Select model', ['AdaBoost (recommended)', 'Random Forest', 'Decision Tree'], index=st.session_state['model_index'])
+    
+    if input_model == 'AdaBoost (recommended)':
+      model = ada_clf
+      st.session_state['model_index'] = 0
+    elif input_model == 'Random Forest':
+      model = rf_clf
+      st.session_state['model_index'] = 1
+    elif input_model == 'Decision Tree':
+      model = dt_clf
+      st.session_state['model_index'] = 2
+
     st.header('Park info', divider='gray')
     st.subheader(f"LF wall distance: {scenario_data['lf_D']} feet")
     st.subheader(f"LF wall height: {scenario_data['lf_W']} feet")
@@ -189,8 +221,8 @@ elif st.session_state['homerun'] == None:
   encoded_row_df = encoded_row.to_frame().T
 
   if submit_form:
-    pred = ada_clf.predict(encoded_row_df)[0]
-    pred_proba = ada_clf.predict_proba(encoded_row_df).max()
+    pred = model.predict(encoded_row_df)[0]
+    pred_proba = model.predict_proba(encoded_row_df).max()
     st.session_state['pred_proba'] = pred_proba
     
     if pred == 1:
@@ -200,9 +232,10 @@ elif st.session_state['homerun'] == None:
       st.session_state['homerun'] = False
     
     st.rerun()
+
 with st.expander('Game tips'):
   st.write('Higher launch speeds have a greater home run probability.')
-  st.write('The ideal launch angle is between 20 and 25 degrees.')
+  st.write('The ideal launch angle is between 20 and 40 degrees.')
   st.write('Each park has different dimensions. Try hitting the ball towards the wall with the shortest distance and height.')
 with st.form(key='new_at_bat_form'):
   st.markdown("""
