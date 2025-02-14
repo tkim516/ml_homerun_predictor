@@ -126,14 +126,14 @@ if st.session_state['homerun'] == True:
   st.balloons()
   st.markdown("<h1 style='font-size: 60px; text-align: center; color: #57cfff;'>HOME RUN!!!</h1>", unsafe_allow_html=True)
   st.divider()
-  st.image('homerun.gif', use_column_width=True)
+  st.image('homerun.gif', use_container_width=True)
   st.divider()
   st.subheader(f'Prediction confidence: {str(st.session_state['pred_proba']*100)[:5]}%')
 
 if st.session_state['homerun'] == False:
   st.markdown("<h1 style='font-size: 60px; text-align: center; color: #eb5b42;'>TRY AGAIN</h1>", unsafe_allow_html=True)
   st.divider()
-  st.image('try_again.gif', use_column_width=True)
+  st.image('try_again.gif', use_container_width=True)
   st.divider()
   st.subheader(f'Prediction confidence: {str(st.session_state['pred_proba']*100)[:5]}%')
 
@@ -145,7 +145,7 @@ elif st.session_state['homerun'] == None:
   st.markdown("<h1 style='text-align: center; color: #57cfff;'>Can you hit a home run?</h1>", unsafe_allow_html=True)
   st.markdown("<h3 style='text-align: center;'>Use machine learning models to predict home runs</h3>", unsafe_allow_html=True)
   st.divider( )
-  st.image('ohtani.gif', use_column_width=True)
+  st.image('ohtani.gif', use_container_width=True)
 
   with st.sidebar:
     st.header('Machine learning models', divider='gray')
